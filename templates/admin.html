@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Admin{% endblock %}{% block crumb %}<a href="/">Home</a> / Admin{% endblock %}{% block content %}
+<div class="hero"><h1>Admin Dashboard</h1><p>Absolute control: chunk visibility, assign, subjects.</p></div>
+<div class="cols" style="margin-top:16px"><div class="card"><h3>Subjects</h3><div id="subs"></div>
+<form onsubmit="return addSub(event)"><input id="slug" placeholder="slug"><input id="nm" placeholder="Name"><button class="btn">Add</button></form></div>
+<div class="card"><h3>Users</h3><div id="users"></div></div></div>
+<script>async function load(){subs.innerText=JSON.stringify(await (await fetch('/subjects/')).json(),null,1);users.innerText=JSON.stringify(await (await fetch('/admin/users')).json(),null,1)}load();
+async function addSub(e){e.preventDefault();await fetch(`/subjects/?slug=${slug.value}&name=${nm.value}`,{method:'POST'});load();return false}</script>
+{% endblock %}

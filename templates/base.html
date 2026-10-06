@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ site_name }} — {% block title %}E-Library{% endblock %}</title>
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+<link rel="stylesheet" href="/static/theme.css"><link rel="stylesheet" href="/static/style.css">
+<script>function t(){const h=document.documentElement;h.dataset.theme=h.dataset.theme==='dark'?'':'dark';localStorage.setItem('th',h.dataset.theme)};document.addEventListener('DOMContentLoaded',()=>{document.documentElement.dataset.theme=localStorage.getItem('th')||''})</script>
+</head><body>
+<header class="topbar">
+<a class="logo" href="/"><span class="mark">C</span>{{ site_name }}</a>
+<nav class="nav"><a href="/">Home</a><a href="/generation">Generation System</a><a href="/notices">Notice</a><a href="/profile">About</a><a href="/profile">Contact</a></nav>
+<form class="search" action="/search" method="get"><input name="q" placeholder="Search subjects, notes, papers..." value="{{ q or '' }}"><button class="btn ghost" title="Search">⌕</button></form>
+<span class="actions"><button class="btn ghost" onclick="t()" title="theme">◐</button><a class="btn ghost" href="/profile" title="Add your API key for private generation">🔑 API Key</a><a class="btn" href="/login">Login</a></span>
+</header>
+<div id="toast" style="display:none;position:fixed;top:64px;right:16px;z-index:50;background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;box-shadow:var(--shadow);font-size:14px;max-width:280px">Please <a href="/login">login</a> for Generation System.<button onclick="document.getElementById('toast').style.display='none'" style="margin-left:8px;background:none;border:none;cursor:pointer;font-size:14px" title="close">✕</button></div>
+<script>fetch('/auth/me',{credentials:'same-origin'}).then(r=>r.json()).then(j=>{if(!j.logged_in){const t=document.getElementById('toast');t.style.display='block';setTimeout(()=>{t.style.display='none'},3000)}}).catch(()=>{})</script>
+<div class="wrap"><div class="crumb">{% block crumb %}{% endblock %}</div>{% block content %}{% endblock %}</div>
+<footer class="footer">{{ site_name }} — {{ site_tagline }}</footer>
+<button class="topbtn" onclick="scrollTo({top:0,behavior:'smooth'})">^</button></body></html>

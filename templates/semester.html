@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}{{ faculty }} Semesters{% endblock %}{% block crumb %}<a href="/">Home</a> / {{ faculty }}{% endblock %}{% block content %}
+<div class="hero"><p class="sub">{{ faculty }} — pick a semester</p><h1>Choose Your SEMESTER</h1></div>
+<div class="grid" style="margin-top:16px">{% for n in range(1,9) %}
+<a class="card" href="/f/{{ faculty }}/sem/{{ n }}"><h3><span class="doc">📘</span>{{ ['First','Second','Third','Fourth','Fifth','Sixth','Seventh','Eighth'][n-1] }} Semester</h3><p>Semester {{ n }} subjects and notes.</p></a>
+{% endfor %}</div>
+{% endblock %}

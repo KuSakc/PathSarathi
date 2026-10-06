@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Profile{% endblock %}{% block content %}
+<div class="hero"><h1>Profile + API Key</h1><p>Complete profile to escalate (generate/private use).</p></div>
+<form class="box card" style="margin-top:16px" onsubmit="return sv(event)">
+<input id="n" placeholder="Full name"><input id="k" placeholder="API key (BYOK)">
+<select id="pr"><option value="openai_compat">openai_compat</option><option value="ollama">ollama</option></select>
+<button class="btn">Save</button></form><pre id="o" class="card"></pre>
+<script>async function sv(e){e.preventDefault();const r=await fetch('/auth/profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({full_name:n.value,api_key:k.value,api_provider:pr.value})});o.innerText=JSON.stringify(await r.json());return false}</script>
+{% endblock %}

@@ -1,0 +1,45 @@
+/* Layout only — colors via var() from theme.css. ICT Solved simplicity. */
+*{box-sizing:border-box}body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:0;background:var(--bg);color:var(--text)}
+a{color:var(--info);text-decoration:none}
+/* Consistent header (ICT style): logo | nav | search | login */
+.topbar{display:flex;align-items:center;gap:18px;background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 20px;position:sticky;top:0;z-index:10;box-shadow:var(--shadow)}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;color:var(--text)}
+.logo .mark{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--accent);color:#fff;font-weight:900}
+.nav{display:flex;gap:16px;margin-left:12px;font-size:14px}.nav a{color:var(--text)}
+.search{margin-left:auto;display:flex;gap:6px;align-items:center}
+.search input{width:200px;margin:0}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{background:var(--btn);color:#fff;border:1px solid transparent;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:14px}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--border)}
+/* Orange gradient hero with subtle diamond pattern */
+.hero{background:linear-gradient(120deg,var(--hero1),var(--hero2));background-image:linear-gradient(120deg,var(--hero1),var(--hero2)),repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 14px,transparent 14px 28px);color:#fff;padding:44px 20px;text-align:center}
+.hero h1{margin:6px 0;font-size:34px;color:#fff}.hero p{margin:4px;opacity:.95}
+.hero .sub{font-size:15px}
+.wrap{max-width:1080px;margin:auto;padding:20px}
+.crumb{font-size:13px;color:var(--muted);margin:14px 0}.crumb a{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 6px;font-size:17px;color:var(--text)}.card h3 .doc{margin-right:8px}
+.card p{color:var(--muted);font-size:13px;min-height:36px}
+.card .meta{font-size:12px;color:var(--muted);display:flex;gap:10px;margin:8px 0}
+.badge{display:inline-block;font-size:11px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:2px 10px;color:var(--muted)}
+.badge.elective{color:var(--accent2);border-color:var(--accent2)}
+.cols{display:grid;grid-template-columns:2fr 1fr;gap:16px}@media(max-width:860px){.cols{grid-template-columns:1fr}.nav{display:none}.search input{width:120px}}
+.resgroup{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:12px 0;box-shadow:var(--shadow)}
+.resgroup h4{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--accent);font-size:15px}
+.resitem{display:block;padding:7px 0;border-top:1px solid var(--border);font-size:14px;color:var(--text)}
+.resitem small{color:var(--muted)}
+.resitem .pdf{color:var(--accent);margin-right:6px}
+/* Generation System 3-pane (NotebookLM-like) */
+.gen3{display:grid;grid-template-columns:260px 1fr 280px;gap:14px}@media(max-width:960px){.gen3{grid-template-columns:1fr}}
+.pane{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow);min-height:420px}
+.pane h3{margin-top:0}
+.srcitem{display:flex;gap:8px;align-items:center;font-size:13px;padding:6px 0;border-top:1px solid var(--border)}
+.studio-btn{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;margin:6px 0;cursor:pointer;color:var(--text)}
+.studio-btn:disabled{opacity:.45;cursor:not-allowed}
+.chatbox{display:flex;gap:8px;margin-top:12px}
+.cards{display:grid;gap:8px}.fcard{border:1px solid var(--border);border-radius:8px;padding:10px;background:var(--card2)}
+input,select,textarea{background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px;width:100%;margin:4px 0}
+form.box{max-width:440px;margin:auto}
+.footer{text-align:center;color:var(--muted);font-size:12px;padding:24px}
+.topbtn{position:fixed;right:12px;bottom:12px;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:8px 12px;cursor:pointer}

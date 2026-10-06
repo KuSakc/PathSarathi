@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Search{% endblock %}{% block crumb %}<a href="/">Home</a> / Search{% endblock %}{% block content %}
+<div class="hero"><h1>Search</h1><p class="sub">Results for "{{ q }}"</p></div>
+<div class="cols" style="margin-top:16px"><div>
+<div class="resgroup"><h4>📘 | Subjects ({{ subjects|length }})</h4>{% for s in subjects %}
+<a class="resitem" href="/subject/{{ s.slug }}"><span class="pdf">📕</span>{{ s.name }}{% if s.is_elective %} - Elective{% endif %} <small>({{ s.course }}{% if s.semester %} Sem {{ s.semester }}{% endif %})</small></a>
+{% else %}<p style="color:var(--muted)">No subjects.</p>{% endfor %}</div>
+<div class="resgroup"><h4>📘 | Resources ({{ resources|length }})</h4>{% for r in resources %}
+<a class="resitem" href="/library/download/{{ r.id }}"><span class="pdf">📕</span>{{ r.title }} <small>({{ r.kind }})</small></a>
+{% else %}<p style="color:var(--muted)">No files.</p>{% endfor %}</div></div>
+<div><div class="resgroup"><h4>📘 | Other Semesters</h4>{% for n in range(1,9) %}<a class="resitem" href="/f/BSc.CSIT/sem/{{ n }}">Semester {{ n }}</a>{% endfor %}</div></div></div>
+{% endblock %}

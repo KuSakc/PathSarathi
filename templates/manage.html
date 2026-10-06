@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% block title %}Manage {{ subject.name }}{% endblock %}
+{% block crumb %}<a href="/">Home</a> / <a href="/subject/{{ subject.slug }}">{{ subject.name }}</a> / Manage{% endblock %}{% block content %}
+<div class="hero"><h1>⚙ Manage {{ subject.name }}</h1><p class="sub">Curriculum editions + notes &amp; additional material files.</p></div>
+<div class="cols" style="margin-top:16px">
+<div>
+<div class="resgroup"><h4>📘 | Curriculum (syllabus editions)</h4>
+<label>Edition</label><select id="ed"><option value="2079">2079</option><option value="2074">2074</option></select>
+<div id="topics"></div>
+<div style="display:flex;gap:6px"><input id="nt" placeholder="New topic"><input id="nh" type="number" placeholder="hrs" style="max-width:80px"><input id="nm" type="number" placeholder="marks" style="max-width:80px"><button class="btn" onclick="addT()">+ Add</button></div>
+<div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="saveS()">Save edition</button><button class="btn ghost" onclick="gap()">Gap vs other edition</button></div>
+<pre id="sout" class="card" style="margin-top:8px"></pre></div>
+<div class="resgroup"><h4>📘 | Files (notes &amp; additional material)</h4>
+<form id="up" onsubmit="return up(event)" enctype="multipart/form-data">
+<input type="file" name="file" required>
+<select name="kind"><option value="notes">notes</option><option value="extra">additional material</option><option value="paper">old question</option><option value="solution">solution</option><option value="syllabus">syllabus</option><option value="book_raw">book</option></select>
+<input name="title" placeholder="Title" required><input name="edition" placeholder="Edition/year">
+<button class="btn">Upload</button></form>
+<div id="files"></div></div>
+</div>
+<div><div class="resgroup"><h4>📘 | How it works</h4><p style="color:var(--muted);font-size:13px">Uploads are chunked into the subject index automatically. Edit titles inline; delete removes file + index entry.</p></div></div>
+</div>
+<script>
+const SID = {{ subject.id }};
+async function loadS(){const r=await fetch('/syllabus/'+SID);const j=await r.json();const ed=document.getElementById('ed').value;const e=j.find(x=>x.edition===ed);topics.innerHTML=(e?e.topics:[]).map((t,i)=>`<div class=srcitem><b>${t.topic}</b><span>${t.hours}h ${t.marks}m</span><button onclick="delT(${i})">✕</button></div>`).join('')||'<p>Empty edition.</p>';window._t=e?e.topics:[]}
+async function addT(){window._t=window._t||[];_t.push({topic:nt.value,hours:+nh.value||0,marks:+nm.value||0});nt.value='';loadRender()}
+function loadRender(){topics.innerHTML=_t.map((t,i)=>`<div class=srcitem><b>${t.topic}</b><span>${t.hours}h ${t.marks}m</span><button onclick="delT(${i})">✕</button></div>`).join('')}
+function delT(i){_t.splice(i,1);loadRender()}
+async function saveS(){const r=await fetch('/syllabus/'+SID,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({edition:ed.value,topics:_t||[]})});sout.innerText=JSON.stringify(await r.json())}
+async function gap(){const r=await fetch(`/syllabus/${SID}/gap?old=2074&new=${ed.value}`);sout.innerText=JSON.stringify(await r.json(),null,1)}
+async function loadF(){const r=await fetch('/library/?subject_id='+SID);const j=await r.json();files.innerHTML=j.map(x=>`<div class=srcitem><b>${x.title}</b><span>${x.kind} ${x.edition||''}</span><button onclick="edt(${x.id},'${x.title.replace(/'/g,'')}')">✎</button><button onclick="delF(${x.id})">✕</button></div>`).join('')||'<p>No uploaded files yet.</p>'}
+async function up(e){e.preventDefault();const r=await fetch('/library/upload',{method:'POST',credentials:'same-origin',body:new FormData(up)});alert(JSON.stringify(await r.json()));up.reset();loadF();return false}
+async function edt(id,t){const nt2=prompt('New title',t);if(!nt2)return;await fetch('/library/'+id+'?title='+encodeURIComponent(nt2),{method:'PATCH',credentials:'same-origin'});loadF()}
+async function delF(id){if(!confirm('Delete file?'))return;await fetch('/library/'+id,{method:'DELETE',credentials:'same-origin'});loadF()}
+ed.onchange=loadS;loadS();loadF();
+</script>
+{% endblock %}

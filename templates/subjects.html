@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}{{ faculty }} Sem {{ sem_label }}{% endblock %}
+{% block crumb %}<a href="/">Home</a> / <a href="/f/{{ faculty }}">{{ faculty }}</a> / {{ sem_label }}{% endblock %}{% block content %}
+<div class="hero"><h1>{{ sem_label }} Semester</h1><p class="sub">The {{ sem_label|lower }} semester of {{ faculty }} — fundamental subjects and notes.</p></div>
+<div class="grid" style="margin-top:16px">{% for s in subjects %}
+<a class="card" href="/subject/{{ s.slug }}"><h3><span class="doc">📘</span>{{ s.name }}{% if s.is_elective %} - Elective{% endif %}</h3><p>{{ s.course }} · Sem {{ s.semester or '—' }}</p>
+<div class="meta"><span>Topics: {{ s.topic_count or '6+' }}</span>{% if s.is_elective %}<span class="badge elective">elective</span>{% endif %}</div>
+<span class="btn">Explore Chapters →</span></a>
+{% else %}<p>No subjects yet for this semester.</p>{% endfor %}</div>
+{% endblock %}

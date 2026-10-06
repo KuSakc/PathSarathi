@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Notices{% endblock %}{% block crumb %}<a href="/">Home</a> / Notices{% endblock %}{% block content %}
+<div class="hero"><h1>Notices</h1><p class="sub">Exam updates and campus announcements.</p></div>
+<div class="grid" style="margin-top:16px">{% for n in notices %}
+<a class="card" href="/notices/{{ n.id }}"><span class="badge">{{ n.tag }}</span><h3 style="margin-top:8px">{{ n.title }}</h3><p>{{ n.date }}</p><span class="btn">Read →</span></a>
+{% endfor %}</div>{% endblock %}

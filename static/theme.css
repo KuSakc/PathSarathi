@@ -1,0 +1,33 @@
+/* Theme variables — sky-blue ICT style default (light). Dark via [data-theme=dark]. ONLY color definitions here. */
+:root {
+  --bg: #eef4fa;
+  --bg2: #ffffff;
+  --card: #ffffff;
+  --card2: #f0f7ff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --accent: #0284c7;
+  --accent2: #38bdf8;
+  --info: #2563eb;
+  --border: #dbeafe;
+  --hero1: #38bdf8;
+  --hero2: #2563eb;
+  --btn: #0284c7;
+  --shadow: 0 1px 3px rgba(15,23,42,.08);
+}
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --bg2: #111a2e;
+  --card: #16213a;
+  --card2: #1c2a47;
+  --text: #e8edf3;
+  --muted: #9aa7b8;
+  --accent: #38bdf8;
+  --accent2: #7dd3fc;
+  --info: #7dd3fc;
+  --border: #274061;
+  --hero1: #38bdf8;
+  --hero2: #1d4ed8;
+  --btn: #0284c7;
+  --shadow: 0 1px 3px rgba(0,0,0,.4);
+}

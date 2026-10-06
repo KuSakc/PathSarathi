@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block title %}{{ subject.name }}{% if subject.is_elective %} - Elective{% endif %}{% endblock %}
+{% block crumb %}<a href="/">Home</a> / <a href="/f/{{ subject.course }}">{{ subject.course }}</a> / {{ subject.name }}{% if subject.is_elective %} - Elective{% endif %}{% endblock %}
+{% block content %}
+<div class="hero"><h1>{{ subject.name }}{% if subject.is_elective %} - Elective{% endif %}</h1>
+<p class="sub">{{ subject.course }}{% if subject.semester %} · Semester {{ subject.semester }}{% endif %} — syllabus, notes, old questions and generated study material.</p></div>
+<div class="cols" style="margin-top:16px"><div>
+{% for gname, items in groups.items() %}
+<div class="resgroup"><h4>📘 | {{ gname }}</h4>{% for r in items %}
+{% if r.demo %}<span class="resitem"><span class="pdf">📕</span>{{ r.title }} <small>({{ r.edition or 'ed' }})</small></span>
+{% else %}<a class="resitem" href="/library/download/{{ r.id }}"><span class="pdf">📕</span>{{ r.title }} <small>({{ r.edition or 'ed' }})</small></a>{% endif %}
+{% else %}<p style="color:var(--muted)">Nothing yet.</p>{% endfor %}</div>
+{% endfor %}
+{% if can_manage %}<div class="resgroup" style="border-color:var(--accent)"><h4>📘 | Manage</h4>
+<p style="color:var(--muted)">Edit curriculum and files for this subject.</p>
+<a class="btn" href="/manage/{{ subject.slug }}">⚙ Manage Curriculum &amp; Files →</a></div>{% endif %}
+<div class="resgroup"><h4>📘 | Generation System</h4>
+{% if logged_in %}<p style="color:var(--muted)">Missing topic? Open the Generation System for RAG-grounded notes, flashcards and paper solving.</p>
+<a class="btn" href="/generation?subject={{ subject.slug }}">Open Generation System →</a>
+{% else %}<p style="color:var(--muted)">Generation System needs an account.</p><a class="btn" href="/login?next=/generation?subject={{ subject.slug }}">Login to Generate →</a>{% endif %}</div></div>
+<div><div class="resgroup"><h4>📘 | Other Subjects</h4>{% for o in others %}<a class="resitem" href="/subject/{{ o.slug }}"><span class="pdf">📕</span>{{ o.name }}{% if o.is_elective %} - Elective{% endif %}</a>{% endfor %}</div>
+<div class="resgroup"><h4>📘 | Other Semesters</h4>{% for n in range(1,9) %}<a class="resitem" href="/f/{{ subject.course }}/sem/{{ n }}"><span class="pdf">📕</span>{{ ['First','Second','Third','Fourth','Fifth','Sixth','Seventh','Eighth'][n-1] }} Semester</a>{% endfor %}</div></div></div>
+{% endblock %}

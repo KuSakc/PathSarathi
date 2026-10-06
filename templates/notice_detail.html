@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}{{ notice.title }}{% endblock %}
+{% block crumb %}<a href="/">Home</a> / <a href="/notices">Notices</a> / {{ notice.title }}{% endblock %}{% block content %}
+<div class="hero"><span class="badge">{{ notice.tag }}</span><h1>{{ notice.title }}</h1><p class="sub">{{ notice.date }}</p></div>
+<div class="cols" style="margin-top:16px"><div class="card"><p style="font-size:15px;color:var(--text)">{{ notice.body }}</p></div>
+<div><div class="resgroup"><h4>📘 | Other Notices</h4>{% for o in notices %}{% if o.id != notice.id %}<a class="resitem" href="/notices/{{ o.id }}"><span class="pdf">📕</span>{{ o.title }}</a>{% endif %}{% endfor %}</div></div></div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}{% block title %}Generation System{% endblock %}{% block crumb %}<a href="/">Home</a> / Generation System{% endblock %}{% block content %}
+<div class="hero"><h1>Generation System</h1><p class="sub">Sources → Ask → Studio. Grounded in your subject library. Requires profile + API key for private use.</p></div>
+<div style="margin:12px 0"><label>Subject</label><select id="gsub" onchange="loadSrc()">{% for s in subjects %}<option value="{{ s.id }}" data-slug="{{ s.slug }}" {% if s.slug==active_slug %}selected{% endif %}>{{ s.name }}{% if s.is_elective %} - Elective{% endif %}</option>{% endfor %}</select></div>
+<div class="gen3">
+<div class="pane"><h3>Sources</h3><button class="studio-btn" onclick="alert('Professors upload via /docs API; files appear here after ingest.')">＋ Add sources</button><div id="srclist"><p style="color:var(--muted)">Select a subject to list its sources.</p></div></div>
+<div class="pane"><h3>📝 Ask / Create</h3>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="studio-btn" style="width:auto" onclick="preset('Learn about a new topic')">Learn about a new topic</button><button class="studio-btn" style="width:auto" onclick="preset('Create something new')">Create something new</button></div>
+<div id="chat" class="cards" style="margin-top:10px"></div>
+<div class="chatbox"><input id="q" placeholder="Ask a question or create something"><button class="btn" onclick="ask()">↑</button></div>
+<p style="font-size:12px;color:var(--muted)">Grounded in selected sources via Chroma RAG. Verify before exams.</p></div>
+<div class="pane"><h3>Studio</h3>
+<button class="studio-btn" onclick="flash()">🗂️ Flashcards</button>
+<button class="studio-btn" onclick="solve()">🧮 Solve Question Paper</button>
+<button class="studio-btn" onclick="summ()">📝 Summary (API)</button>
+<button class="studio-btn" onclick="quiz()">❓ Quiz Me</button>
+<button class="studio-btn" disabled title="Not in scope">🔊 Audio Overview (off)</button>
+<button class="studio-btn" disabled title="Not in scope">📊 Slide Deck (off)</button>
+<div id="studio_out" class="cards" style="margin-top:10px"></div>
+<h3 style="margin-top:14px">Export</h3>
+<p style="font-size:12px;color:var(--muted)">Styled PDF: title + linked TOC + footers.</p>
+<input id="xtitle" placeholder="PDF title" value="Study Notes">
+<button class="studio-btn" onclick="expo()">⬇ Export last output to PDF</button>
+<div id="exp_out" style="font-size:13px"></div></div>
+</div>
+<script>
+let lastMD = "";
+async function api(url, body){
+  const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(body)});
+  if(r.status===401){location.href='/login?next=/generation';return null}
+  if(r.status===403){location.href='/profile';return null}
+  return await r.json();
+}
+async function loadSrc(){const id=gsub.value;const r=await fetch('/library/?subject_id='+id,{credentials:'same-origin'});srclist.innerHTML='<pre style=white-space:pre-wrap>'+JSON.stringify(await r.json(),null,1)+'</pre>'}
+async function ask(){const id=gsub.value;const t=q.value||'Overview';chat.innerHTML+='<div class=fcard><b>You:</b> '+t+'</div>';const j=await api('/generate/'+id,{topic:t,syllabus_weight:5,paper_frequency:0});if(!j)return;chat.innerHTML+='<div class=fcard><b>AI ('+(j.depth||'?')+'):</b> doc #'+(j.id||'?')+' — <a href=\"/generate/download/'+(j.id||'')+'\">PDF</a></div>';q.value=''}
+function preset(t){q.value=t;q.focus()}
+async function flash(){const id=gsub.value;const t=q.value||'Overview';const j=await api('/generate/'+id+'/flashcards',{topic:t,count:6});if(!j)return;lastMD='# Flashcards: '+t+'\n\n'+j.cards.map((c,i)=>`## Card ${i+1}\n**Q:** ${c.q}\n**A:** ${c.a}`).join('\n\n');studio_out.innerHTML='<pre style=white-space:pre-wrap>'+JSON.stringify(j,null,1).slice(0,2000)+'</pre>'}
+async function solve(){const id=gsub.value;const t=q.value||'Past paper Q1';const j=await api('/generate/'+id+'/solve',{question:t});if(!j)return;lastMD=j.solution_md||'';studio_out.innerHTML='<pre style=white-space:pre-wrap>'+JSON.stringify(j,null,1).slice(0,2000)+'</pre>'}
+async function summ(){const id=gsub.value;const t=q.value||'Overview';const j=await api('/generate/'+id+'/summary',{topic:t,length:'standard',use_external:true});if(!j)return;lastMD=j.summary_md||'';studio_out.innerHTML='<pre style=white-space:pre-wrap>'+JSON.stringify(j,null,1).slice(0,2000)+'</pre>'}
+async function quiz(){const id=gsub.value;const t=q.value||'Overview';const j=await api('/generate/'+id+'/quiz',{topic:t,count:5});if(!j)return;lastMD='# Quiz: '+t+'\n\n'+j.quiz.map((x,i)=>`## Q${i+1}: ${x.q}\n- ${x.choices.join('\n- ')}\n**Answer:** ${x.answer}`).join('\n\n');studio_out.innerHTML='<pre style=white-space:pre-wrap>'+JSON.stringify(j,null,1).slice(0,2000)+'</pre>'}
+async function expo(){const j=await api('/generate/export/pdf',{title:xtitle.value||'Study Notes',content_md:lastMD});if(!j)return;exp_out.innerHTML=j.pdf?'<a href=\"'+j.download+'\">⬇ '+j.pdf+'</a>':JSON.stringify(j)}
+loadSrc();
+</script>
+{% endblock %}

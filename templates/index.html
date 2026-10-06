@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Choose Faculty{% endblock %}{% block crumb %}Choose the Faculty{% endblock %}{% block content %}
+<div class="hero"><p>It's not just a faculty but a choice for your future.</p><h1>Choose Your Faculty</h1></div>
+<div class="grid" style="margin-top:16px">{% for f in faculties %}
+<a class="card" href="/f/{{ f }}"><h3>{{ f }}</h3><p>{{ descriptions.get(f, 'Study resources, syllabus and generated notes.') }}</p><span class="btn">Open →</span></a>
+{% endfor %}</div>{% endblock %}

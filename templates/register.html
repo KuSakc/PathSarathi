@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Register{% endblock %}{% block content %}
+<div class="hero"><h1>Register</h1><p>Student or Professor — same form.</p></div>
+<form class="box card" style="margin-top:16px" onsubmit="return reg(event)">
+<input id="u" placeholder="username" required><input id="p" type="password" placeholder="password" required>
+<select id="role"><option value="student">Student</option><option value="professor">Professor</option></select>
+<button class="btn">Register</button></form><pre id="o" class="card"></pre>
+<script>async function reg(e){e.preventDefault();const r=await fetch('/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:document.getElementById('u').value,password:document.getElementById('p').value,role:document.getElementById('role').value})});o.innerText=JSON.stringify(await r.json());return false}</script>
+{% endblock %}

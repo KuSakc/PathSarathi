@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+garibi_dev.db
+chroma_db/
+data/raw/
+data/generated/
+*.pdf
+.opencode/
